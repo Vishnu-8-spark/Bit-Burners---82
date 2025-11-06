@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VTU Smart Learning Hub</title>
+  <style>
+    /* === RESET === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #0b0f19;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      margin-top: 70px;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: #9ca3af;
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    /* === CONTAINER === */
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 50px;
+      width: 90%;
+      max-width: 1100px;
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .title {
+      text-align: center;
+      font-size: 1.6rem;
+      margin-bottom: 30px;
+      color: #a5b4fc;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .selectors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    /* === CARD === */
+    .card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 25px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+      border-color: rgba(139, 92, 246, 0.6);
+    }
+
+    .icon {
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #9ca3af;
+      line-height: 1.4;
+    }
+
+    /* === BUTTONS === */
+    .buttons {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .btn {
+      background: #3b82f6;
+      border: none;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 30px;
+      margin: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #8b5cf6;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+    }
+
+    footer {
+      margin: 50px 0;
+      font-size: 0.9rem;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+
+      .container {
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Plan Smarter. Learn Faster.</h1>
+    <p>A grade-aware VTU hub that curates study materials, notes, and 10 years of past papers.</p>
+  </header>
+
+  <section class="container">
+    <h2 class="title">Select Your Grade</h2>
+
+    <div class="selectors">
+      <div class="card">
+        <div class="icon">📘</div>
+        <h3>1st Year (Sem 1 & 2)</h3>
+        <p>Core engineering fundamentals and basic labs for all branches.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🧮</div>
+        <h3>2nd Year (Sem 3 & 4)</h3>
+        <p>Introduction to applied subjects like Data Structures, Circuits & OOPs.</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚙</div>
+        <h3>3rd Year (Sem 5 & 6)</h3>
+        <p>Department core topics — Machine Learning, Microcontrollers, Networks, etc.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🚀</div>
+        <h3>4th Year (Sem 7 & 8)</h3>
+        <p>Projects, internships, and final year elective preparation modules.</p>
+      </div>
+    </div>
+
+    <h2 class="title" style="margin-top:50px;">Select Target Exam</h2>
+
+    <div class="selectors">
+      <div class="card">
+        <div class="icon">🎓</div>
+        <h3>VTU Internal / Final Exams</h3>
+        <p>Access 10 years of past question papers and syllabus-wise notes.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📚</div>
+        <h3>GATE / Aptitude</h3>
+        <p>Boost your analytical and reasoning skills for competitive exams.</p>
+      </div>
+      <div class="card">
+        <div class="icon">💻</div>
+        <h3>Placement Prep</h3>
+        <p>Coding questions, interview topics, and company-specific test papers.</p>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn">Select Grade & Exam</button>
+      <button class="btn" style="background:#10b981;">Watch 60-sec Demo</button>
+    </div>
+  </section>
+
+  <footer>© 2025 VTU Smart Planner | Built with 💜 for the Hackathon</footer>
+
+</body>
+</html>
