@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VTU Mini & Final Year Projects</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #9333ea, #3b82f6);
+      padding: 1.5rem;
+      text-align: center;
+      color: white;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+    }
+
+    .project-card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .project-card h2 {
+      color: #60a5fa;
+      margin-bottom: 0.3rem;
+    }
+
+    .project-card p {
+      color: #cbd5e1;
+    }
+
+    .tools {
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .button {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .button:hover {
+      background: #1d4ed8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #1e293b;
+      color: #9ca3af;
+      margin-top: 3rem;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #1e293b;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      color: #e2e8f0;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VTU Mini & Final Year Projects</h1>
+    <p>Explore Ideas, Abstracts, and Tools for Every Branch</p>
+  </header>
+
+  <div class="container">
+    <div class="filters">
+      <select>
+        <option>Select Branch</option>
+        <option>CSE</option>
+        <option>ECE</option>
+        <option>ME</option>
+        <option>CIVIL</option>
+      </select>
+      <select>
+        <option>Select Type</option>
+        <option>Mini Project</option>
+        <option>Final Year Project</option>
+      </select>
+      <select>
+        <option>Select Topic</option>
+        <option>AI/ML</option>
+        <option>Web Development</option>
+        <option>IoT</option>
+        <option>Embedded Systems</option>
+      </select>
+    </div>
+
+    <!-- Example Project Card -->
+    <div class="project-card">
+      <h2>Smart Waste Segregation System using IoT</h2>
+      <p><strong>Branch:</strong> ECE | <strong>Type:</strong> Final Year Project</p>
+      <p class="tools"><strong>Tools/Technologies:</strong> Arduino, Ultrasonic Sensor, NodeMCU, Blynk App</p>
+      <p><strong>Expected Output:</strong> Automatic waste classification and bin status monitoring through IoT dashboard.</p>
+      <button class="button" onclick="openModal('Smart Waste Segregation System using IoT')">📄 View Abstract</button>
+      <a href="SmartWasteProjectReport.pdf" target="_blank" class="button">📥 Download Report</a>
+    </div>
+
+    <div class="project-card">
+      <h2>AI-Powered Attendance Tracker</h2>
+      <p><strong>Branch:</strong> CSE | <strong>Type:</strong> Mini Project</p>
+      <p class="tools"><strong>Tools/Technologies:</strong> Python, OpenCV, Flask, SQLite</p>
+      <p><strong>Expected Output:</strong> Face recognition-based attendance logging with report generation.</p>
+      <button class="button" onclick="openModal('AI-Powered Attendance Tracker')">📄 View Abstract</button>
+      <a href="AI_Attendance_Report.pdf" target="_blank" class="button">📥 Download Report</a>
+    </div>
+  </div>
+
+  <!-- Abstract Modal -->
+  <div class="modal" id="abstractModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <h2 id="modalTitle"></h2>
+      <p id="modalAbstract"></p>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 VTU Student Hub | All Rights Reserved
+  </footer>
+
+  <script>
+    const abstracts = {
+      "Smart Waste Segregation System using IoT": "This project focuses on developing an automated waste segregation system using IoT-enabled sensors and microcontrollers. The system classifies dry and wet waste using ultrasonic sensors and updates real-time bin status via the Blynk app. It helps in maintaining cleaner urban areas and promotes efficient recycling management.",
+      "AI-Powered Attendance Tracker": "This project automates attendance using facial recognition powered by OpenCV and Python. It captures faces in real time, verifies against the student database, and stores attendance in SQLite. A Flask-based dashboard allows faculty to view reports, reducing manual errors and saving time."
+    };
+
+    function openModal(title) {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalAbstract").textContent = abstracts[title];
+      document.getElementById("abstractModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("abstractModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("abstractModal");
+      if (event.target === modal) modal.style.display = "none";
+    };
+  </script>
+</body>
+</html>

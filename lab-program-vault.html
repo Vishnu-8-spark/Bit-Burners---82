@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VTU Lab Program Vault</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: #0b1120;
+      color: #e2e8f0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #6d28d9, #2563eb);
+      padding: 1rem 2rem;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-bar input,
+    .search-bar select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+    }
+
+    .program-card {
+      background: #1e293b;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .program-card:hover {
+      transform: scale(1.02);
+    }
+
+    .program-card h3 {
+      margin: 0;
+      color: #60a5fa;
+    }
+
+    pre {
+      background: #0f172a;
+      padding: 0.8rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #a5b4fc;
+    }
+
+    .viva {
+      background: #0f172a;
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    a.button {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VTU Lab Program Vault</h1>
+    <p>Explore Lab Programs with Outputs, Viva Questions & Concepts</p>
+  </header>
+
+  <div class="container">
+    <div class="search-bar">
+      <select>
+        <option>Select Semester</option>
+        <option>3rd Sem</option>
+        <option>4th Sem</option>
+      </select>
+      <select>
+        <option>Select Branch</option>
+        <option>CSE</option>
+        <option>ECE</option>
+        <option>ME</option>
+      </select>
+      <input type="text" placeholder="Search Lab (e.g. Data Structures)">
+    </div>
+
+    <div class="program-card">
+      <h3>1. Stack Implementation using Arrays (C Program)</h3>
+      <p><strong>Concept:</strong> Demonstrates LIFO structure and stack operations (push, pop, display).</p>
+
+      <pre>
+#include <stdio.h>
+#define SIZE 5
+int stack[SIZE], top = -1;
+
+void push(int val) {
+  if (top == SIZE - 1) printf("Stack Overflow\\n");
+  else stack[++top] = val;
+}
+
+void pop() {
+  if (top == -1) printf("Stack Underflow\\n");
+  else printf("Popped: %d\\n", stack[top--]);
+}
+
+int main() {
+  push(10); push(20); pop();
+  return 0;
+}
+      </pre>
+
+      <div class="viva">
+        <strong>Viva Questions:</strong>
+        <ol>
+          <li>What is a stack?</li>
+          <li>What is LIFO?</li>
+          <li>What happens when stack overflows?</li>
+          <li>How is push implemented?</li>
+          <li>Can stack be implemented using linked list?</li>
+        </ol>
+      </div>
+
+      <a class="button" href="sample-output.pdf" target="_blank">View Sample Output (PDF)</a>
+    </div>
+
+  </div>
+</body>
+</html>

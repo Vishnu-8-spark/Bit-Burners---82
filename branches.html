@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VTU Smart Learning Hub | All Branches</title>
+<style>
+  * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;}
+  
+  body {
+    background-color: #0b0f19;
+    color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+    color: white;
+    width: 100%;
+  }
+
+  header h1 {font-size: 2.5rem; font-weight: 700;}
+  header p {margin-top: 8px; font-size: 1.1rem;}
+
+  .buttons {
+    margin: 30px 0 20px;
+    text-align: center;
+  }
+
+  .btn {
+    background: linear-gradient(90deg,#2563eb,#7c3aed);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    margin: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .btn:hover {
+    background: linear-gradient(90deg,#9333ea,#3b82f6);
+    box-shadow: 0 0 10px rgba(139,92,246,0.6);
+  }
+
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(139,92,246,0.3);
+    backdrop-filter: blur(5px);
+  }
+
+  section {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  section.active {display: block;}
+
+  h2 {color: #a5b4fc; margin-bottom: 15px; border-bottom: 2px solid #3b82f6; display: inline-block;}
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+  }
+
+  th, td {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background: rgba(59,130,246,0.2);
+    color: #93c5fd;
+  }
+
+  td a {
+    color: #60a5fa;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  td a:hover {
+    color: #f472b6;
+    text-decoration: underline;
+  }
+
+  footer {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin: 30px 0 20px;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+</style>
+<script>
+  function showBranch(branchId) {
+    document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById(branchId).classList.add("active");
+  }
+</script>
+</head>
+<body>
+
+<header>
+  <h1>VTU Smart Learning Hub</h1>
+  <p>All Branches | Notes • Syllabus • Question Papers</p>
+</header>
+
+<div class="buttons">
+  <button class="btn" onclick="showBranch('year1')">1st Year</button>
+  <button class="btn" onclick="showBranch('cse')">CSE</button>
+  <button class="btn" onclick="showBranch('aiml')">AI & ML</button>
+  <button class="btn" onclick="showBranch('cyber')">Cyber Security</button>
+  <button class="btn" onclick="showBranch('ds')">Data Science</button>
+  <button class="btn" onclick="showBranch('eee')">EEE</button>
+  <button class="btn" onclick="showBranch('ece')">ECE</button>
+  <button class="btn" onclick="showBranch('me')">Mechanical</button>
+  <button class="btn" onclick="showBranch('civil')">Civil</button>
+</div>
+
+<div class="container">
+
+  <!-- 1st Year -->
+  <section id="year1">
+    <h2>1st Year Engineering</h2>
+
+    <h3>1st Semester (P Cycle)</h3>
+    <table>
+      <tr><th>Code</th><th>Subject</th><th>Resources</th></tr>
+      <tr><td>21MAT11</td><td>Engineering Mathematics - I</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21PHY12</td><td>Engineering Physics</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21CIV12</td><td>Indian Constitution</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21SHF12</td><td>Scientific & Health Foundations</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21CAED12</td><td>Computer Aided Engineering Drawing (CAED)</td><td><a href="#" target="_blank">Notes</a></td></tr>
+    </table>
+
+    <h3>2nd Semester (C Cycle)</h3>
+    <table>
+      <tr><th>Code</th><th>Subject</th><th>Resources</th></tr>
+      <tr><td>21ENG22</td><td>English</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21MAT22</td><td>Engineering Mathematics - II</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21PP22</td><td>Principle of Programming</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21IDT22</td><td>Innovative Design Thinking</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21CHE22</td><td>Engineering Chemistry</td><td><a href="#" target="_blank">Notes</a></td></tr>
+      <tr><td>21WM22</td><td>Waste Management</td><td><a href="#" target="_blank">Notes</a></td></tr>
+    </table>
+  </section>
+
+  <!-- CSE -->
+  <section id="cse">
+    <h2>Computer Science & Engineering (CSE)</h2>
+    <table>
+      <tr><th>Code</th><th>Subject</th><th>Resources</th></tr>
+      <tr><td>21CS32</td><td>Data Structures and Applications</td><td><a href="https://noteshunt.in/vtu/data-structures" target="_blank">Notes</a></td></tr>
+      <tr><td>21CS42</td><td>Design and Analysis of Algorithms</td><td><a href="https://noteshunt.in/vtu/daa" target="_blank">Notes</a></td></tr>
+      <tr><td>21CS43</td><td>Operating Systems</td><td><a href="https://noteshunt.in/vtu/operating-systems" target="_blank">Notes</a></td></tr>
+    </table>
+  </section>
+
+  <!-- Add other branches similarly... -->
+
+</div>
+
+<footer>
+  © 2025 VTU Smart Learning Hub | Resources: 
+  <a href="https://noteshunt.in" target="_blank" style="color:#60a5fa;">NotesHunt</a>,
+  <a href="https://vtuupdates.com" target="_blank" style="color:#60a5fa;">VTU Updates</a>,
+  <a href="https://studydrive.net" target="_blank" style="color:#60a5fa;">Studydrive</a>
+</footer>
+
+</body>
+</html>

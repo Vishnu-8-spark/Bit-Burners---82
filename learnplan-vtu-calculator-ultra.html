@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LearnPlan • VTU SGPA/CGPA Ultra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { color-scheme: dark; }
+    body { background-color: #020617; color: #e2e8f0; }
+    .glass { background: rgba(15, 23, 42, 0.66); backdrop-filter: blur(10px); }
+    .chip { border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.06); }
+    .accent-grad { background-image: linear-gradient(135deg, rgba(250,204,21,.12), rgba(34,197,94,.12)); }
+    .focus-ring:focus { outline: none; box-shadow: 0 0 0 3px rgba(34,197,94,0.35); }
+    .kbd { border:1px solid rgba(255,255,255,.2); border-bottom-width:3px; border-radius:8px; padding:2px 6px; font-size:12px; }
+    ::selection { background: rgba(34,197,94,0.25); color: #fff; }
+    .menu { position: absolute; z-index: 30; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Background blobs -->
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-32 -left-24 h-[30rem] w-[30rem] rounded-full bg-amber-400/20 blur-3xl"></div>
+    <div class="absolute top-1/2 -right-24 h-[28rem] w-[28rem] rounded-full bg-emerald-400/20 blur-3xl"></div>
+    <div class="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-lime-300/10 blur-3xl"></div>
+  </div>
+
+  <header class="sticky top-0 z-20 backdrop-blur bg-slate-900/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+      <div class="w-9 h-9 rounded-2xl bg-white text-slate-900 grid place-items-center text-lg shadow">📐</div>
+      <div class="flex-1">
+        <h1 class="text-base font-semibold tracking-wide">LearnPlan • VTU SGPA/CGPA Ultra</h1>
+        <p class="text-xs text-slate-400 -mt-0.5">Subject code search • Auto credits • Filters • Undo/Redo • % conversion • CSV/JSON</p>
+      </div>
+      <div class="hidden md:flex items-center gap-3 text-xs text-slate-300">
+        <span class="kbd">B</span> add row
+        <span class="kbd">Del</span> delete selected
+        <span class="kbd">Ctrl</span>+<span class="kbd">S</span> save
+        <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> undo
+        <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> redo
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <!-- Controls -->
+    <section class="glass accent-grad rounded-3xl p-4 border border-white/10 shadow">
+      <div class="grid md:grid-cols-6 gap-3">
+        <div>
+          <label class="text-xs text-slate-400">Scheme</label>
+          <select id="scheme" class="focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2">
+            <option value="2021">2021</option>
+            <option value="2018">2018</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400">Branch</label>
+          <select id="branch" class="focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2">
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="ME">ME</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400">Semester</label>
+          <select id="semester" class="focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+            <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400">Filters</label>
+          <div class="mt-1 grid grid-cols-3 gap-2 text-xs">
+            <label class="flex items-center gap-1"><input id="fCore" type="checkbox" class="accent-emerald-400" checked/> Core</label>
+            <label class="flex items-center gap-1"><input id="fLab" type="checkbox" class="accent-emerald-400" checked/> Lab</label>
+            <label class="flex items-center gap-1"><input id="fElective" type="checkbox" class="accent-emerald-400" checked/> Elective</label>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400">Template</label>
+          <div class="mt-1 grid grid-cols-2 gap-2">
+            <button id="btn-load-template" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">Load</button>
+            <button id="btn-clear-template" class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Clear</button>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400">Data</label>
+          <div class="mt-1 grid grid-cols-4 gap-2">
+            <button id="btn-save" class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Save</button>
+            <button id="btn-export-json" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">JSON</button>
+            <button id="btn-export-csv" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">CSV</button>
+            <label class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer text-center">Import<input id="file-import" type="file" accept="application/json" class="hidden"></label>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-slate-400 mt-2">Tip: Select scheme/branch/semester, then <b>Load</b>. Use the subject code field to search by code/name. Credits auto-fill from the catalog but are editable.</p>
+    </section>
+
+    <!-- SGPA Panel -->
+    <section class="space-y-3">
+      <div class="glass rounded-3xl p-4 border border-white/10 shadow">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h2 class="font-semibold text-lg">Semester SGPA</h2>
+            <p class="text-sm text-slate-300">Search/choose subject codes; L‑T‑P and credits auto-fill. Tag and filter subjects.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="btn-add-row" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">Add Row</button>
+            <button id="btn-del-row" class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Delete Selected</button>
+            <div class="text-right ml-2">
+              <div class="text-xs text-slate-400">SGPA</div>
+              <div id="sgpaValue" class="text-2xl font-extrabold">0.00</div>
+              <div id="sgpaPercent" class="text-xs text-slate-400 text-right">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-3xl p-4 border border-white/10 shadow">
+        <div class="overflow-x-auto rounded-2xl border border-white/10 relative">
+          <table class="min-w-full text-sm">
+            <thead class="bg-white/5 text-slate-300">
+              <tr>
+                <th class="px-3 py-2 text-left w-8">Sel</th>
+                <th class="px-3 py-2 text-left">Code / Search</th>
+                <th class="px-3 py-2 text-left">Subject</th>
+                <th class="px-3 py-2 text-left">L‑T‑P</th>
+                <th class="px-3 py-2 text-left">Type</th>
+                <th class="px-3 py-2 text-left">Credits</th>
+                <th class="px-3 py-2 text-left">Grade</th>
+                <th class="px-3 py-2 text-right">Points</th>
+                <th class="px-3 py-2 text-right">Fav</th>
+              </tr>
+            </thead>
+            <tbody id="sgpaRows" class="divide-y divide-white/10"></tbody>
+          </table>
+        </div>
+
+        <div class="mt-3 grid sm:grid-cols-4 gap-3">
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">Total Credits</div><div id="sgpaTotalCredits" class="text-lg font-semibold">0</div></div>
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">Credit Points</div><div id="sgpaCreditPoints" class="text-lg font-semibold">0</div></div>
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">SGPA</div><div id="sgpaSummary" class="text-lg font-semibold">0.00</div></div>
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">% (custom)</div><div id="sgpaSummaryPercent" class="text-lg font-semibold">—</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CGPA Panel -->
+    <section class="space-y-3">
+      <div class="glass rounded-3xl p-4 border border-white/10 shadow">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h2 class="font-semibold text-lg">Cumulative CGPA</h2>
+            <p class="text-sm text-slate-300">Enter per‑semester SGPA and credits — weighted CGPA updates live, plus custom percentage.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-add-sem" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">Add Semester</button>
+            <button id="btn-del-sem" class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Remove Last</button>
+            <div class="text-right ml-2">
+              <div class="text-xs text-slate-400">CGPA</div>
+              <div id="cgpaValue" class="text-2xl font-extrabold">0.00</div>
+              <div id="cgpaPercent" class="text-xs text-slate-400 text-right">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-3xl p-4 border border-white/10 shadow">
+        <div id="cgpaWrap" class="grid md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        <div class="mt-3 grid sm:grid-cols-4 gap-3">
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">Total Credits</div><div id="cgpaTotalCredits" class="text-lg font-semibold">0</div></div>
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">Weighted Points</div><div id="cgpaWeighted" class="text-lg font-semibold">0</div></div>
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">CGPA</div><div id="cgpaSummary" class="text-lg font-semibold">0.00</div></div>
+          <div class="p-3 rounded-2xl chip"><div class="text-xs text-slate-400">% (custom)</div><div id="cgpaSummaryPercent" class="text-lg font-semibold">—</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Config & Admin -->
+    <section class="space-y-3">
+      <div class="glass accent-grad rounded-3xl p-4 border border-white/10 shadow">
+        <h2 class="font-semibold text-lg">Settings</h2>
+        <p class="text-sm text-slate-300">Grade mapping and percentage conversion. Adjust to match your institution.</p>
+      </div>
+      <div class="glass rounded-3xl p-4 border border-white/10 shadow grid md:grid-cols-2 gap-4">
+        <div>
+          <h3 class="font-semibold mb-2">Grade Mapping</h3>
+          <div id="mappingRows" class="grid sm:grid-cols-2 gap-2"></div>
+          <div class="mt-2 flex gap-2">
+            <button id="btn-reset-map" class="px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm">Reset</button>
+            <button id="btn-add-grade" class="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-sm font-semibold hover:bg-slate-200">Add</button>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">% Conversion</h3>
+          <p class="text-xs text-slate-400 mb-2">Use <code>% = a × GPA + b</code>. Defaults are placeholders — set according to your university.</p>
+          <div class="grid grid-cols-3 gap-2 items-end">
+            <div><label class="text-xs text-slate-400">a</label><input id="convA" type="number" step="0.01" class="focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2" value="9.5"></div>
+            <div><label class="text-xs text-slate-400">b</label><input id="convB" type="number" step="0.01" class="focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2" value="0"></div>
+            <button id="btn-apply-conv" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">Apply</button>
+          </div>
+          <p class="text-xs text-slate-500 mt-2">Example: Some boards use <code>% = (GPA - 0.75) × 10</code> → set <b>a = 10</b>, <b>b = -7.5</b>.</p>
+        </div>
+      </div>
+
+      <div class="glass accent-grad rounded-3xl p-4 border border-white/10 shadow">
+        <h2 class="font-semibold text-lg">Subject Catalog (Admin)</h2>
+        <p class="text-sm text-slate-300">This powers subject codes. Import/export JSON. Supports type and L‑T‑P.</p>
+      </div>
+      <div class="glass rounded-3xl p-4 border border-white/10 shadow">
+        <div class="mb-2 flex flex-wrap gap-2">
+          <button id="btn-export-catalog" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">Export Catalog</button>
+          <label class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer">Import Catalog<input id="file-catalog" type="file" accept="application/json" class="hidden"></label>
+          <button id="btn-reset-catalog" class="px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Reset to Sample</button>
+        </div>
+        <textarea id="catalogJson" class="w-full h-64 rounded-2xl bg-white/5 border border-white/10 p-3 font-mono text-xs focus-ring" placeholder='{"2021":{"CSE":{"3":[{"code":"21CS32","name":"Data Structures","credits":4,"ltp":"3-0-2","type":"Core"}]}}}'></textarea>
+        <div class="mt-2 flex gap-2">
+          <button id="btn-apply-catalog" class="px-3 py-2 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-200">Apply</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 bg-slate-900/50">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-slate-400 flex flex-col md:flex-row gap-2 items-center justify-between">
+      <p>© <span id="year"></span> LearnPlan. Ultra calculator.</p>
+      <p class="opacity-80">Search • Filters • Catalog • CSV/JSON • Undo/Redo</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ---- Local Storage ----
+    const LS_STATE = 'lp_ultra_state_v1';
+    const LS_CATALOG = 'lp_ultra_catalog_v1';
+    const LS_FAVS = 'lp_ultra_favs_v1';
+
+    function saveLS(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+    function loadLS(k, d){ try { const x = JSON.parse(localStorage.getItem(k)); return x ?? d; } catch { return d; } }
+
+    // ---- Sample Catalog (extend/replace) ----
+    const sampleCatalog = {
+      "2021": {
+        "CSE": {
+          "3": [
+            { code: "21CS31", name: "Mathematics III", credits: 3, ltp: "3-0-0", type: "Core" },
+            { code: "21CS32", name: "Data Structures", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21CS33", name: "Digital Systems", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21CSL34", name: "Data Structures Lab", credits: 2, ltp: "0-0-3", type: "Lab" },
+            { code: "21CSL35", name: "Digital Systems Lab", credits: 2, ltp: "0-0-3", type: "Lab" },
+            { code: "21CSELE1", name: "Open Elective I", credits: 3, ltp: "3-0-0", type: "Elective" }
+          ],
+          "4": [
+            { code: "21CS41", name: "DAA", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21CS42", name: "Computer Organization", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21CS43", name: "Operating Systems", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21CSL46", name: "Algo Lab", credits: 2, ltp: "0-0-3", type: "Lab" },
+            { code: "21CSELE2", name: "Open Elective II", credits: 3, ltp: "3-0-0", type: "Elective" }
+          ]
+        },
+        "ECE": {
+          "3": [
+            { code: "21EC32", name: "Analog Circuits", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21EC33", name: "Signals & Systems", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "21ECL34", name: "Analog Circuits Lab", credits: 2, ltp: "0-0-3", type: "Lab" }
+          ]
+        }
+      },
+      "2018": {
+        "ME": {
+          "3": [
+            { code: "18ME32", name: "Mechanics of Materials", credits: 4, ltp: "3-0-2", type: "Core" },
+            { code: "18ME33", name: "Manufacturing Process", credits: 4, ltp: "3-0-2", type: "Core" }
+          ]
+        }
+      }
+    };
+
+    // ---- State ----
+    const state = loadLS(LS_STATE, {
+      scheme: "2021", branch: "CSE", semester: "3",
+      mapping: [
+        { grade: "S", point: 10 }, { grade: "A", point: 9 }, { grade: "B", point: 8 },
+        { grade: "C", point: 7 }, { grade: "D", point: 6 }, { grade: "E", point: 5 }, { grade: "F", point: 0 }
+      ],
+      conv: { a: 9.5, b: 0 },
+      sgpaRows: [], // {selected, code, name, ltp, type, credits, grade, fav}
+      cgpaSems: []  // {title, sgpa, credits}
+    });
+    let catalog = loadLS(LS_CATALOG, sampleCatalog);
+    let favs = loadLS(LS_FAVS, []);
+
+    // ---- Undo/Redo ----
+    const undoStack = []; const redoStack = [];
+    function pushUndo(){ undoStack.push(JSON.stringify(state)); if (undoStack.length > 30) undoStack.shift(); redoStack.length = 0; }
+    function doUndo(){ if (!undoStack.length) return; redoStack.push(JSON.stringify(state)); Object.assign(state, JSON.parse(undoStack.pop())); renderAll(); }
+    function doRedo(){ if (!redoStack.length) return; undoStack.push(JSON.stringify(state)); Object.assign(state, JSON.parse(redoStack.pop())); renderAll(); }
+
+    // ---- Helpers ----
+    const $ = (id) => document.getElementById(id);
+    function gradeToPoint(g){ const m = state.mapping.find(x => (x.grade||'').toUpperCase() === (g||'').toUpperCase()); return m ? Number(m.point) : 0; }
+    function applyConv(gpa){ const a = Number(state.conv.a)||0, b = Number(state.conv.b)||0; const pct = a*gpa + b; return isFinite(pct) ? pct : 0; }
+    function saveAll(){ saveLS(LS_STATE, state); saveLS(LS_CATALOG, catalog); saveLS(LS_FAVS, favs); }
+
+    // ---- Bind top controls ----
+    $('scheme').value = state.scheme; $('branch').value = state.branch; $('semester').value = state.semester;
+    $('scheme').onchange = e => { pushUndo(); state.scheme = e.target.value; saveAll(); renderRows(); };
+    $('branch').onchange = e => { pushUndo(); state.branch = e.target.value; saveAll(); renderRows(); };
+    $('semester').onchange = e => { pushUndo(); state.semester = e.target.value; saveAll(); renderRows(); };
+
+    $('btn-save').onclick = () => { saveAll(); alert('Saved locally ✔'); };
+    $('btn-export-json').onclick = () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = 'learnplan-ultra-data.json'; a.click(); URL.revokeObjectURL(url);
+    };
+    $('btn-export-csv').onclick = () => {
+      const rows = [['Code','Subject','LTP','Type','Credits','Grade','Points']];
+      state.sgpaRows.forEach(r => rows.push([r.code,r.name,r.ltp||'',r.type||'',r.credits, r.grade, (gradeToPoint(r.grade)*(Number(r.credits)||0)).toFixed(2)]));
+      const csv = rows.map(r => r.map(x => `"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = 'learnplan-ultra-sgpa.csv'; a.click(); URL.revokeObjectURL(url);
+    };
+    $('file-import').onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader(); reader.onload = () => { try { pushUndo(); const data = JSON.parse(reader.result); Object.assign(state, data); saveAll(); renderAll(); } catch { alert('Invalid JSON'); } }; reader.readAsText(file);
+    };
+
+    // Template
+    $('btn-load-template').onclick = () => {
+      const list = (((catalog[state.scheme]||{})[state.branch]||{})[state.semester]||[]);
+      if (!list.length) return alert('No catalog entries for this selection.');
+      pushUndo();
+      state.sgpaRows = list.map(s => ({ selected:false, code:s.code, name:s.name, ltp:s.ltp||'', type:s.type||'Core', credits:s.credits||0, grade:'S', fav: favs.includes(s.code) }));
+      renderRows();
+    };
+    $('btn-clear-template').onclick = () => { pushUndo(); state.sgpaRows = []; renderRows(); };
+
+    // ---- Mapping UI ----
+    function renderMapping(){
+      const wrap = $('mappingRows'); wrap.innerHTML = '';
+      state.mapping.forEach((m, idx) => {
+        const row = document.createElement('div');
+        row.className = "p-2 rounded-xl chip flex items-end gap-2";
+        row.innerHTML = `
+          <div><label class="text-xs text-slate-400">Grade</label><input value="${m.grade}" data-i="${idx}" data-k="grade" class="focus-ring mt-1 w-16 rounded-xl bg-white/5 border border-white/10 px-2 py-1"></div>
+          <div><label class="text-xs text-slate-400">Point</label><input type="number" step="0.5" value="${m.point}" data-i="${idx}" data-k="point" class="focus-ring mt-1 w-20 rounded-xl bg-white/5 border border-white/10 px-2 py-1"></div>
+          <button data-i="${idx}" class="ml-auto px-2 py-1 rounded-lg border border-white/10 hover:bg-white/10">Remove</button>`;
+        wrap.appendChild(row);
+        row.querySelectorAll('input').forEach(inp => inp.oninput = (e)=>{
+          pushUndo();
+          const i = Number(e.target.dataset.i), k=e.target.dataset.k;
+          state.mapping[i][k] = k==='point' ? Number(e.target.value) : e.target.value;
+          saveAll(); renderRows();
+        });
+        row.querySelector('button').onclick = ()=>{ pushUndo(); state.mapping.splice(idx,1); saveAll(); renderMapping(); renderRows(); };
+      });
+    }
+    $('btn-reset-map').onclick = ()=>{ pushUndo(); state.mapping = [
+      { grade: "S", point: 10 }, { grade: "A", point: 9 }, { grade: "B", point: 8 },
+      { grade: "C", point: 7 }, { grade: "D", point: 6 }, { grade: "E", point: 5 }, { grade: "F", point: 0 }
+    ]; saveAll(); renderMapping(); renderRows(); };
+    $('btn-add-grade').onclick = ()=>{ pushUndo(); state.mapping.push({grade:"X", point:0}); saveAll(); renderMapping(); renderRows(); };
+
+    // ---- Conversion ----
+    $('convA').value = state.conv.a; $('convB').value = state.conv.b;
+    $('btn-apply-conv').onclick = ()=>{ pushUndo(); state.conv.a = Number($('convA').value)||0; state.conv.b = Number($('convB').value)||0; saveAll(); renderSummaries(); };
+
+    // ---- Catalog admin ----
+    $('catalogJson').value = JSON.stringify(catalog, null, 2);
+    $('btn-export-catalog').onclick = ()=>{
+      const blob = new Blob([JSON.stringify(catalog, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='learnplan-ultra-catalog.json'; a.click(); URL.revokeObjectURL(url);
+    };
+    $('file-catalog').onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader(); reader.onload = () => { try { catalog = JSON.parse(reader.result); saveAll(); $('catalogJson').value = JSON.stringify(catalog, null, 2); renderRows(); } catch { alert('Invalid JSON'); } }; reader.readAsText(file);
+    };
+    $('btn-reset-catalog').onclick = ()=>{ catalog = JSON.parse(JSON.stringify(sampleCatalog)); saveAll(); $('catalogJson').value = JSON.stringify(catalog, null, 2); renderRows(); };
+    $('btn-apply-catalog').onclick = ()=>{ try { catalog = JSON.parse($('catalogJson').value); saveAll(); alert('Catalog applied ✔'); renderRows(); } catch { alert('Invalid JSON'); } };
+
+    // ---- Rows ----
+    const fCore = $('fCore'), fLab = $('fLab'), fElective = $('fElective');
+    [fCore, fLab, fElective].forEach(cb => cb.onchange = ()=> renderRows());
+
+    $('btn-add-row').onclick = ()=>{ pushUndo(); state.sgpaRows.push({selected:false, code:'', name:'', ltp:'', type:'Core', credits:0, grade:'S', fav:false}); renderRows(); };
+    $('btn-del-row').onclick = ()=>{ pushUndo(); state.sgpaRows = state.sgpaRows.filter(r => !r.selected); renderRows(); };
+
+    function filteredCatalogList(){
+      const list = (((catalog[state.scheme]||{})[state.branch]||{})[state.semester]||[]);
+      return list.filter(s => (s.type==='Core' && fCore.checked) || (s.type==='Lab' && fLab.checked) || (s.type==='Elective' && fElective.checked));
+    }
+
+    function renderRows(){
+      const tbody = $('sgpaRows'); tbody.innerHTML = '';
+      const list = filteredCatalogList();
+
+      state.sgpaRows.forEach((r, i) => {
+        const tr = document.createElement('tr'); tr.className = "align-top";
+        const pts = (gradeToPoint(r.grade) * (Number(r.credits) || 0)).toFixed(2);
+
+        // Search/autocomplete input
+        const idSearch = `search-${i}`; const idMenu = `menu-${i}`;
+        tr.innerHTML = `
+          <td class="px-3 py-2"><input type="checkbox" ${r.selected?'checked':''} data-i="${i}" data-k="selected"></td>
+          <td class="px-3 py-2 relative">
+            <input id="${idSearch}" value="${r.code||''}" placeholder="Type code or name..." class="focus-ring w-44 rounded-xl bg-white/5 border border-white/10 px-2 py-1">
+            <div id="${idMenu}" class="menu hidden w-72 mt-1 rounded-xl bg-slate-900 border border-white/10 shadow-lg max-h-56 overflow-auto"></div>
+          </td>
+          <td class="px-3 py-2"><input value="${r.name||''}" data-i="${i}" data-k="name" class="focus-ring w-72 rounded-xl bg-white/5 border border-white/10 px-2 py-1"></td>
+          <td class="px-3 py-2"><input value="${r.ltp||''}" data-i="${i}" data-k="ltp" class="focus-ring w-24 rounded-xl bg-white/5 border border-white/10 px-2 py-1"></td>
+          <td class="px-3 py-2">
+            <select data-i="${i}" data-k="type" class="focus-ring w-28 rounded-xl bg-white/5 border border-white/10 px-2 py-1">
+              ${['Core','Lab','Elective'].map(t => `<option value="${t}" ${t===r.type?'selected':''}>${t}</option>`).join('')}
+            </select>
+          </td>
+          <td class="px-3 py-2"><input type="number" min="0" step="0.5" value="${r.credits||0}" data-i="${i}" data-k="credits" class="focus-ring w-24 rounded-xl bg-white/5 border border-white/10 px-2 py-1"></td>
+          <td class="px-3 py-2">
+            <select data-i="${i}" data-k="grade" class="focus-ring w-28 rounded-xl bg-white/5 border border-white/10 px-2 py-1">
+              ${state.mapping.map(m => `<option value="${m.grade}" ${m.grade===r.grade?'selected':''}>${m.grade} (${m.point})</option>`).join('')}
+            </select>
+          </td>
+          <td class="px-3 py-2 text-right">${pts}</td>
+          <td class="px-3 py-2 text-right"><button data-i="${i}" data-act="fav" title="Toggle favorite">${r.fav?'★':'☆'}</button></td>
+        `;
+        tbody.appendChild(tr);
+
+        // Bind generic inputs
+        tr.querySelectorAll('input,select,button').forEach(el => {
+          el.oninput = el.onclick = (e) => {
+            const act = e.target.dataset.act;
+            if (act === 'fav') {
+              pushUndo();
+              const idx = Number(e.target.dataset.i);
+              state.sgpaRows[idx].fav = !state.sgpaRows[idx].fav;
+              const code = state.sgpaRows[idx].code;
+              if (state.sgpaRows[idx].fav) { if (!favs.includes(code)) favs.push(code); } else { favs = favs.filter(c => c !== code); }
+              saveAll(); renderRows();
+              return;
+            }
+            const i = Number(e.target.dataset.i); const k = e.target.dataset.k;
+            if (k) {
+              pushUndo();
+              let v = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+              if (k === 'credits') v = Number(v);
+              state.sgpaRows[i][k] = v;
+              saveAll(); renderRows();
+            }
+          };
+        });
+
+        // Search behavior
+        const inp = document.getElementById(idSearch);
+        const menu = document.getElementById(idMenu);
+        function refreshMenu(){
+          const q = (inp.value||'').trim().toLowerCase();
+          if (!q) { menu.classList.add('hidden'); menu.innerHTML=''; return; }
+          const res = list.filter(s => s.code.toLowerCase().includes(q) || (s.name||'').toLowerCase().includes(q));
+          if (!res.length) { menu.classList.add('hidden'); menu.innerHTML=''; return; }
+          menu.innerHTML = res.map(s => `<div data-code="${s.code}" class="px-3 py-2 hover:bg-white/10 cursor-pointer flex justify-between"><span><b>${s.code}</b> — ${s.name}</span><span class="text-xs text-slate-400">${s.type || ''} • ${s.ltp || ''} • ${s.credits} cr</span></div>`).join('');
+          menu.classList.remove('hidden');
+          menu.querySelectorAll('[data-code]').forEach(item => item.onclick = (e)=>{
+            const code = e.currentTarget.getAttribute('data-code');
+            const found = list.find(x => x.code === code);
+            if (found) {
+              pushUndo();
+              state.sgpaRows[i].code = found.code;
+              state.sgpaRows[i].name = found.name;
+              state.sgpaRows[i].ltp = found.ltp || '';
+              state.sgpaRows[i].type = found.type || 'Core';
+              state.sgpaRows[i].credits = found.credits || 0;
+              saveAll(); renderRows();
+            }
+          });
+        }
+        inp.oninput = refreshMenu;
+        inp.onfocus = refreshMenu;
+        inp.onblur = ()=> setTimeout(()=> menu.classList.add('hidden'), 150);
+      });
+
+      renderSummaries();
+      saveAll();
+    }
+
+    function renderSummaries(){
+      const totCred = state.sgpaRows.reduce((a,b)=> a + (Number(b.credits)||0), 0);
+      const creditPts = state.sgpaRows.reduce((a,b)=> a + (gradeToPoint(b.grade)*(Number(b.credits)||0)), 0);
+      const sgpa = totCred ? (creditPts / totCred) : 0;
+      $('sgpaTotalCredits').textContent = (Math.round(totCred*100)/100).toString();
+      $('sgpaCreditPoints').textContent = creditPts.toFixed(2);
+      $('sgpaSummary').textContent = sgpa.toFixed(2);
+      $('sgpaValue').textContent = sgpa.toFixed(2);
+      const sp = applyConv(sgpa); $('sgpaSummaryPercent').textContent = isFinite(sp) ? sp.toFixed(2)+'%' : '—';
+      $('sgpaPercent').textContent = isFinite(sp) ? sp.toFixed(2)+'%' : '—';
+
+      const totCred2 = state.cgpaSems.reduce((a,b)=> a + (Number(b.credits)||0), 0);
+      const weighted = state.cgpaSems.reduce((a,b)=> a + ((Number(b.sgpa)||0) * (Number(b.credits)||0)), 0);
+      const cgpa = totCred2 ? (weighted / totCred2) : 0;
+      $('cgpaTotalCredits').textContent = (Math.round(totCred2*100)/100).toString();
+      $('cgpaWeighted').textContent = weighted.toFixed(2);
+      $('cgpaSummary').textContent = cgpa.toFixed(2);
+      $('cgpaValue').textContent = cgpa.toFixed(2);
+      const cp = applyConv(cgpa); $('cgpaSummaryPercent').textContent = isFinite(cp) ? cp.toFixed(2)+'%' : '—';
+      $('cgpaPercent').textContent = isFinite(cp) ? cp.toFixed(2)+'%' : '—';
+    }
+
+    // CGPA UI
+    function renderCgpa(){
+      const wrap = $('cgpaWrap'); wrap.innerHTML = '';
+      state.cgpaSems.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-2xl chip';
+        card.innerHTML = `
+          <div class='text-xs text-slate-400 mb-1'>Semester ${i+1}</div>
+          <input value='${s.title||''}' placeholder='Title (optional)' data-i='${i}' data-k='title' class='focus-ring mb-2 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2'>
+          <div class='grid grid-cols-2 gap-2'>
+            <div><label class='text-xs text-slate-400'>SGPA</label><input type='number' min='0' max='10' step='0.01' value='${s.sgpa}' data-i='${i}' data-k='sgpa' class='focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2'></div>
+            <div><label class='text-xs text-slate-400'>Credits</label><input type='number' min='0' step='0.5' value='${s.credits}' data-i='${i}' data-k='credits' class='focus-ring mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2'></div>
+          </div>`;
+        wrap.appendChild(card);
+        card.querySelectorAll('input').forEach(inp => inp.oninput = (e)=>{
+          pushUndo();
+          const i = Number(e.target.dataset.i), k = e.target.dataset.k; let v = e.target.value;
+          if (k !== 'title') v = Number(v);
+          state.cgpaSems[i][k] = v; saveAll(); renderSummaries();
+        });
+      });
+      renderSummaries();
+    }
+    $('btn-add-sem').onclick = ()=>{ pushUndo(); state.cgpaSems.push({title:'', sgpa:0, credits:0}); renderCgpa(); };
+    $('btn-del-sem').onclick = ()=>{ pushUndo(); state.cgpaSems.pop(); renderCgpa(); };
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e)=>{
+      if (e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); saveAll(); alert('Saved ✔'); }
+      if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); doUndo(); }
+      if (e.ctrlKey && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); doRedo(); }
+      if (e.key === 'Delete') { e.preventDefault(); $('btn-del-row').click(); }
+      if (e.key === 'b' || e.key === 'B') { e.preventDefault(); $('btn-add-row').click(); }
+    });
+
+    function renderAll(){ renderMapping(); renderRows(); renderCgpa(); }
+    renderAll();
+    if (state.cgpaSems.length === 0) { state.cgpaSems = [{title:'Sem 1', sgpa:0, credits:0}, {title:'Sem 2', sgpa:0, credits:0}]; renderCgpa(); }
+  </script>
+</body>
+</html>

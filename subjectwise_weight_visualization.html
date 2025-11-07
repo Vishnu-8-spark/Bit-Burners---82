@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subject-Wise Weightage Visualization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 25% 15%, #0b0f1e, #05070d 80%);
+      color: #f4f4f5;
+      overflow-x: hidden;
+      padding: 60px 5%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      max-width: 700px;
+      margin: 15px auto;
+      font-size: 1.1rem;
+      color: #a1a1aa;
+    }
+
+    /* Chart Container */
+    .chart-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 0 35px rgba(124, 58, 237, 0.25);
+      backdrop-filter: blur(12px);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .subject-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 25px 30px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+    }
+
+    .subject-title {
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .percentage {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #818cf8;
+      margin-bottom: 15px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+      transition: width 0.6s ease;
+    }
+
+    .topics {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      margin-top: 5px;
+    }
+
+    footer {
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 60px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Subject-Wise Weightage Visualization</h1>
+    <p>See exactly which subjects carry the most marks and how much of your syllabus is covered — no more guesswork.</p>
+  </header>
+
+  <section class="chart-section">
+    <div class="chart-grid">
+      <div class="subject-card">
+        <div class="subject-title">Mathematics</div>
+        <div class="percentage">35%</div>
+        <div class="progress-bar"><div class="progress" style="width: 35%;"></div></div>
+        <div class="topics">Syllabus covered: 60%</div>
+      </div>
+
+      <div class="subject-card">
+        <div class="subject-title">Science</div>
+        <div class="percentage">40%</div>
+        <div class="progress-bar"><div class="progress" style="width: 40%;"></div></div>
+        <div class="topics">Syllabus covered: 75%</div>
+      </div>
+
+      <div class="subject-card">
+        <div class="subject-title">English</div>
+        <div class="percentage">25%</div>
+        <div class="progress-bar"><div class="progress" style="width: 25%;"></div></div>
+        <div class="topics">Syllabus covered: 85%</div>
+      </div>
+
+      <div class="subject-card">
+        <div class="subject-title">Computer Science</div>
+        <div class="percentage">30%</div>
+        <div class="progress-bar"><div class="progress" style="width: 30%;"></div></div>
+        <div class="topics">Syllabus covered: 65%</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 LearnPlan | Subject Analytics Dashboard
+  </footer>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unified Resource Aggregator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 30% 20%, #0b0f1e, #05070d 80%);
+      color: #f1f1f1;
+      overflow-x: hidden;
+      padding: 60px 5%;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    header h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #4f46e5, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      max-width: 750px;
+      margin: 15px auto;
+      color: #a1a1aa;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* Main Section Container */
+    .aggregator {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 0 35px rgba(124, 58, 237, 0.2);
+      backdrop-filter: blur(12px);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .aggregator h2 {
+      text-align: center;
+      color: #c7d2fe;
+      font-size: 1.8rem;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Filter Buttons */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+
+    .filter {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 30px;
+      padding: 8px 18px;
+      color: #d4d4d8;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter:hover {
+      background: rgba(99, 102, 241, 0.3);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Resource Grid */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 30px;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+    }
+
+    .rank {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 0.85rem;
+      color: #818cf8;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #a1a1aa;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+    }
+
+    .difficulty {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .easy { background: #10b981; }
+    .medium { background: #facc15; }
+    .hard { background: #ef4444; }
+
+    footer {
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 60px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Unified Resource Aggregator</h1>
+    <p>A modern hub that curates videos, notes, and past papers — intelligently ranked by relevance, difficulty, and your performance.</p>
+  </header>
+
+  <section class="aggregator">
+    <h2>Resources by Topic & Difficulty</h2>
+
+    <div class="filters">
+      <div class="filter">🎥 YouTube Lessons</div>
+      <div class="filter">📘 Study PDFs</div>
+      <div class="filter">🧾 Past Papers</div>
+      <div class="filter">Easy</div>
+      <div class="filter">Medium</div>
+      <div class="filter">Hard</div>
+    </div>
+
+    <div class="resource-grid">
+      <div class="card">
+        <span class="rank">Rank #1</span>
+        <h3>Algebra Simplified</h3>
+        <p>Master core algebra concepts through visuals and intuitive real-world problems.</p>
+        <div class="tags">
+          <span class="tag">🎥 YouTube</span>
+          <span class="tag">12 min</span>
+        </div>
+        <div class="difficulty"><span class="dot easy"></span> Easy</div>
+      </div>
+
+      <div class="card">
+        <span class="rank">Rank #2</span>
+        <h3>Kinematics Essentials</h3>
+        <p>Concise motion and velocity-time graph notes for quick learning before exams.</p>
+        <div class="tags">
+          <span class="tag">📘 Study PDF</span>
+          <span class="tag">8 pages</span>
+        </div>
+        <div class="difficulty"><span class="dot medium"></span> Medium</div>
+      </div>
+
+      <div class="card">
+        <span class="rank">Rank #3</span>
+        <h3>JEE Practice – Algebra</h3>
+        <p>Contains 15 past questions with complete stepwise solutions and analysis.</p>
+        <div class="tags">
+          <span class="tag">🧾 Past Paper</span>
+          <span class="tag">JEE</span>
+        </div>
+        <div class="difficulty"><span class="dot hard"></span> Hard</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 LearnPlan | Personalized Study Resource Hub
+  </footer>
+</body>
+</html>

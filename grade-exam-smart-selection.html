@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VTU Smart Learning Hub | All Branches</title>
+<style>
+  /* RESET + BASE */
+  * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;}
+  :root {
+    --bg: #0b0f19;
+    --panel: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+    --accent1:#3b82f6; --accent2:#8b5cf6; --accent3:#ec4899;
+    --text:#f3f4f6; --muted:#9ca3af; --link:#60a5fa;
+  }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+
+  /* HEADER */
+  header {
+    text-align: center; padding: 40px 20px; width: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+    color: white;
+  }
+  header h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: .3px; }
+  header p { margin-top: 8px; font-size: 1.05rem; opacity: .95; }
+
+  /* WRAPPER */
+  .container {
+    width: 92%; max-width: 1200px; margin: 20px 0 28px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 18px; padding: 20px; box-shadow: 0 0 24px rgba(139,92,246,.25);
+    backdrop-filter: blur(8px);
+  }
+
+  /* TOP CONTROLS */
+  .toolbar {
+    display: grid; gap: 12px; grid-template-columns: 1fr;
+  }
+  .toolbar .searchbar {
+    display:flex; gap:10px; align-items:center; background: rgba(255,255,255,0.04);
+    border:1px solid var(--border); border-radius: 12px; padding: 10px 12px;
+  }
+  .toolbar input[type="search"]{
+    flex:1; background: transparent; border:none; outline:none; color: var(--text);
+    font-size: 0.95rem;
+  }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    border: 1px solid var(--border); background: rgba(255,255,255,0.06);
+    color:#dbeafe; border-radius: 20px; padding: 8px 14px; font-weight: 600; cursor: pointer;
+    transition: .25s; font-size: .9rem;
+  }
+  .chip:hover { box-shadow: 0 0 10px rgba(139,92,246,.35); transform: translateY(-1px); }
+  .chip.active { background: linear-gradient(90deg,var(--accent1),var(--accent2)); border-color: transparent; color:#fff; }
+
+  /* BRANCH CARDS (from page 2 vibe) */
+  .grid-branches {
+    display: grid; gap: 16px; margin-top: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .card-branch {
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px; cursor: pointer;
+    transition: .3s; position: relative; overflow:hidden;
+  }
+  .card-branch:hover { transform: translateY(-6px); box-shadow: 0 0 18px rgba(139,92,246,.4); border-color: rgba(139,92,246,.6); }
+  .card-branch .icon { font-size: 28px; margin-bottom: 8px; }
+  .card-branch h3 { font-size: 1.05rem; margin-bottom: 4px; }
+  .card-branch p { font-size: .86rem; color: var(--muted); }
+
+  /* SECTIONS */
+  section { display: none; animation: fadeIn .35s ease; }
+  section.active { display: block; }
+
+  h2 { color:#a5b4fc; margin: 14px 0 6px; border-bottom: 2px solid var(--accent1); display:inline-block; padding-bottom: 4px; }
+  .subhead { color: var(--muted); margin-top: 6px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  th, td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+  th { background: rgba(59,130,246,.18); color:#93c5fd; font-weight: 700; }
+  td a { color: var(--link); text-decoration: none; transition:.25s; }
+  td a:hover { color: #f472b6; text-decoration: underline; }
+
+  /* SUB-ANCHORS (sem quick links) */
+  .anchors { display:flex; flex-wrap:wrap; gap:8px; margin-top: 10px; }
+  .anchors a {
+    color:#c7d2fe; border:1px solid var(--border); padding:6px 10px; border-radius:10px; text-decoration:none; font-size:.86rem;
+    background: rgba(255,255,255,0.04);
+  }
+  .anchors a:hover { background: rgba(59,130,246,.22); }
+
+  footer {
+    text-align: center; color: #9ca3af; font-size: 0.9rem; margin: 20px 0 30px;
+  }
+  footer a { color: var(--link); }
+
+  @keyframes fadeIn { from {opacity:0; transform: translateY(8px);} to {opacity:1; transform: translateY(0);} }
+
+  /* RESPONSIVE */
+  @media (min-width: 768px){
+    .toolbar { grid-template-columns: 1.2fr 1fr; align-items: center; }
+  }
+</style>
+<script>
+  // --- App State ---
+  const BRANCHES = [
+    { id:'year1', name:'1st Year (All Branches)', icon:'📘', blurb:'P & C cycles, common foundation' },
+    { id:'cse',   name:'Computer Science',        icon:'💻', blurb:'DSA, OS, CN, DBMS, ML' },
+    { id:'aiml',  name:'AI & ML',                 icon:'🧠', blurb:'ML, DL, MLOps' },
+    { id:'cyber', name:'Cyber Security',          icon:'🛡️', blurb:'Networks, Crypto, Security' },
+    { id:'ds',    name:'Data Science',            icon:'📊', blurb:'Stats, ML, Data Eng' },
+    { id:'ece',   name:'Electronics & Comm',      icon:'📡', blurb:'Signals, VLSI, Embedded' },
+    { id:'eee',   name:'Electrical & Electronics',icon:'⚡', blurb:'Machines, Power, Control' },
+    { id:'me',    name:'Mechanical',              icon:'⚙️', blurb:'Thermo, Design, Manufacturing' },
+    { id:'civil', name:'Civil',                   icon:'🏗️', blurb:'Structures, Survey, Geo' },
+  ];
+
+  // Quick search across visible section table rows
+  function applySearch(q){
+    const sec = document.querySelector("section.active");
+    if (!sec) return;
+    const rows = sec.querySelectorAll("tbody tr");
+    const needle = q.trim().toLowerCase();
+    rows.forEach(r=>{
+      const t = r.textContent.toLowerCase();
+      r.style.display = (!needle || t.includes(needle)) ? "" : "none";
+    });
+  }
+
+  // Show a specific branch section + activate chip & card
+  function showBranch(branchId) {
+    // sections
+    document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+    const target = document.getElementById(branchId);
+    if (target) target.classList.add("active");
+
+    // chips
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    const chip = document.querySelector(`.chip[data-branch="${branchId}"]`);
+    if (chip) chip.classList.add("active");
+
+    // scroll to container top for better UX
+    const cont = document.querySelector(".container");
+    if (cont) cont.scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  // card click -> show branch
+  function bootCards(){
+    document.querySelectorAll(".card-branch").forEach(card=>{
+      card.addEventListener("click", ()=> showBranch(card.dataset.branch));
+    });
+  }
+
+  // chips click
+  function bootChips(){
+    document.querySelectorAll(".chip").forEach(ch=>{
+      ch.addEventListener("click", ()=> showBranch(ch.dataset.branch));
+    });
+  }
+
+  // search input
+  function bootSearch(){
+    const input = document.getElementById("search");
+    if (!input) return;
+    input.addEventListener("input", e => applySearch(e.target.value));
+  }
+
+  // On load, default to CSE (or first year)
+  document.addEventListener("DOMContentLoaded", ()=>{
+    bootCards(); bootChips(); bootSearch();
+    showBranch('cse'); // default landing branch
+  });
+</script>
+</head>
+<body>
+
+<header>
+  <h1>VTU Smart Learning Hub</h1>
+  <p>All Branches • Notes • Syllabus • Question Papers • Clean UI</p>
+</header>
+
+<div class="container">
+  <!-- Toolbar: chips + search -->
+  <div class="toolbar">
+    <div class="chips">
+      <!-- Chips for quick switching (all functional) -->
+      <button class="chip" data-branch="year1">1st Year</button>
+      <button class="chip" data-branch="cse">CSE</button>
+      <button class="chip" data-branch="aiml">AI & ML</button>
+      <button class="chip" data-branch="cyber">Cyber Security</button>
+      <button class="chip" data-branch="ds">Data Science</button>
+      <button class="chip" data-branch="ece">ECE</button>
+      <button class="chip" data-branch="eee">EEE</button>
+      <button class="chip" data-branch="me">Mechanical</button>
+      <button class="chip" data-branch="civil">Civil</button>
+    </div>
+    <div class="searchbar">
+      🔎
+      <input id="search" type="search" placeholder="Search in the visible branch (code, subject, resource)..." />
+    </div>
+  </div>
+
+  <!-- Branch Cards (clickable templates like page 2) -->
+  <div class="grid-branches" style="margin-top:16px;">
+    <!-- Auto content created from BRANCHES at build-time? Here we write static for simplicity -->
+    <div class="card-branch" data-branch="year1"><div class="icon">📘</div><h3>1st Year (All)</h3><p>P & C cycles, common foundation</p></div>
+    <div class="card-branch" data-branch="cse"><div class="icon">💻</div><h3>CSE</h3><p>DSA, OS, CN, DBMS, ML</p></div>
+    <div class="card-branch" data-branch="aiml"><div class="icon">🧠</div><h3>AI & ML</h3><p>ML, DL, MLOps</p></div>
+    <div class="card-branch" data-branch="cyber"><div class="icon">🛡️</div><h3>Cyber Security</h3><p>Networks, Crypto, SecOps</p></div>
+    <div class="card-branch" data-branch="ds"><div class="icon">📊</div><h3>Data Science</h3><p>Stats, ML, Data Eng</p></div>
+    <div class="card-branch" data-branch="ece"><div class="icon">📡</div><h3>ECE</h3><p>Signals, VLSI, Embedded</p></div>
+    <div class="card-branch" data-branch="eee"><div class="icon">⚡</div><h3>EEE</h3><p>Machines, Power, Control</p></div>
+    <div class="card-branch" data-branch="me"><div class="icon">⚙️</div><h3>Mechanical</h3><p>Thermo, Design, Manufacturing</p></div>
+    <div class="card-branch" data-branch="civil"><div class="icon">🏗️</div><h3>Civil</h3><p>Structures, Survey, Geo</p></div>
+  </div>
+
+  <!-- === SECTIONS (ALL BRANCHES FUNCTIONAL) === -->
+
+  <!-- 1st Year -->
+  <section id="year1">
+    <h2>1st Year Engineering</h2>
+    <p class="subhead">Common subjects for all branches. Use the anchors to jump by semester.</p>
+    <div class="anchors">
+      <a href="#y1-s1">Sem 1 (P Cycle)</a>
+      <a href="#y1-s2">Sem 2 (C Cycle)</a>
+    </div>
+
+    <h3 id="y1-s1" style="margin-top:12px;">1st Semester (P Cycle)</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21MAT11</td><td>Engineering Mathematics - I</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Syllabus</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21PHY12</td><td>Engineering Physics</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Lab Manual</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CAED12</td><td>Computer Aided Engineering Drawing (CAED)</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">CAD Files</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="y1-s2" style="margin-top:18px;">2nd Semester (C Cycle)</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21ENG22</td><td>English</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Syllabus</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21MAT22</td><td>Engineering Mathematics - II</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Formula Sheet</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21PP22</td><td>Principle of Programming</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Programs</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- CSE -->
+  <section id="cse">
+    <h2>Computer Science & Engineering (CSE)</h2>
+    <div class="anchors">
+      <a href="#cse-s3">Sem 3</a><a href="#cse-s4">Sem 4</a><a href="#cse-s5">Sem 5</a><a href="#cse-s6">Sem 6</a>
+    </div>
+
+    <h3 id="cse-s3" style="margin-top:12px;">Semester 3</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CS32</td><td>Data Structures and Applications</td><td>
+          <a href="https://noteshunt.in/vtu/data-structures" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Syllabus</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CS33</td><td>Digital Systems</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Lab</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="cse-s4">Semester 4</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CS42</td><td>Design and Analysis of Algorithms</td><td>
+          <a href="https://noteshunt.in/vtu/daa" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Syllabus</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CS43</td><td>Operating Systems</td><td>
+          <a href="https://noteshunt.in/vtu/operating-systems" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Programs</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="cse-s5">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CS51</td><td>Computer Networks</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Labs (Wireshark)</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CS52</td><td>DBMS</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">SQL Lab</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="cse-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CS61</td><td>Machine Learning</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Datasets</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CS62</td><td>Web Technology</td><td>
+          <a href="#" target="_blank">Notes</a> •
+          <a href="#" target="_blank">Lab</a> •
+          <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- AI & ML -->
+  <section id="aiml">
+    <h2>Artificial Intelligence & Machine Learning</h2>
+    <div class="anchors"><a href="#aiml-s5">Sem 5</a><a href="#aiml-s6">Sem 6</a></div>
+
+    <h3 id="aiml-s5" style="margin-top:12px;">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21AI51</td><td>Foundations of AI</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Syllabus</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21AI52</td><td>Probability & Statistics for AI</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Formulas</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="aiml-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21AI61</td><td>Deep Learning</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Colab Labs</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21AI62</td><td>MLOps</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Pipelines</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Cyber Security -->
+  <section id="cyber">
+    <h2>Cyber Security</h2>
+    <div class="anchors"><a href="#cy-s5">Sem 5</a><a href="#cy-s6">Sem 6</a></div>
+
+    <h3 id="cy-s5" style="margin-top:12px;">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CY51</td><td>Cryptography</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Proofs</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CY52</td><td>Network Security</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Labs</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="cy-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CY61</td><td>Digital Forensics</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Case Studies</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CY62</td><td>App & Cloud Security</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Labs</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Data Science -->
+  <section id="ds">
+    <h2>Data Science</h2>
+    <div class="anchors"><a href="#ds-s5">Sem 5</a><a href="#ds-s6">Sem 6</a></div>
+
+    <h3 id="ds-s5" style="margin-top:12px;">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21DS51</td><td>Statistics for DS</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">R/Python Labs</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21DS52</td><td>Data Engineering</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Pipelines</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="ds-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21DS61</td><td>Machine Learning</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Datasets</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21DS62</td><td>Data Visualization</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Projects</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ECE -->
+  <section id="ece">
+    <h2>Electronics & Communication (ECE)</h2>
+    <div class="anchors"><a href="#ece-s3">Sem 3</a><a href="#ece-s4">Sem 4</a></div>
+
+    <h3 id="ece-s3" style="margin-top:12px;">Semester 3</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21EC32</td><td>Analog Circuits</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Lab</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21EC33</td><td>Signals & Systems</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Problems</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="ece-s4">Semester 4</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21EC42</td><td>Digital Electronics</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Lab</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21EC43</td><td>Microcontrollers</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Projects</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- EEE -->
+  <section id="eee">
+    <h2>Electrical & Electronics (EEE)</h2>
+    <div class="anchors"><a href="#eee-s5">Sem 5</a><a href="#eee-s6">Sem 6</a></div>
+
+    <h3 id="eee-s5" style="margin-top:12px;">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21EE51</td><td>Power Electronics</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Problems</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21EE52</td><td>Electrical Machines</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Lab</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="eee-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21EE61</td><td>Power Systems</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Case Studies</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21EE62</td><td>Control Systems</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">MATLAB</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Mechanical -->
+  <section id="me">
+    <h2>Mechanical Engineering</h2>
+    <div class="anchors"><a href="#me-s5">Sem 5</a><a href="#me-s6">Sem 6</a></div>
+
+    <h3 id="me-s5" style="margin-top:12px;">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21ME51</td><td>Thermodynamics</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Problems</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21ME52</td><td>Machine Design</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Design Data Book</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="me-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21ME61</td><td>Manufacturing Processes</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Workshop</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21ME62</td><td>Fluid Mechanics</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Numericals</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Civil -->
+  <section id="civil">
+    <h2>Civil Engineering</h2>
+    <div class="anchors"><a href="#ce-s5">Sem 5</a><a href="#ce-s6">Sem 6</a></div>
+
+    <h3 id="ce-s5" style="margin-top:12px;">Semester 5</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CV51</td><td>Structural Analysis</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Problems</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CV52</td><td>Surveying</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Lab (Levelling)</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="ce-s6">Semester 6</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Subject</th><th>Resources</th></tr></thead>
+      <tbody>
+        <tr><td>21CV61</td><td>Geotechnical Engineering</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Lab</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+        <tr><td>21CV62</td><td>Transportation Engineering</td><td>
+          <a href="#" target="_blank">Notes</a> • <a href="#" target="_blank">Design</a> • <a href="#" target="_blank">Papers</a>
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<footer>
+  © 2025 VTU Smart Learning Hub • Curated resources:
+  <a href="https://noteshunt.in" target="_blank">NotesHunt</a>,
+  <a href="https://vtuupdates.com" target="_blank">VTU Updates</a>,
+  <a href="https://studydrive.net" target="_blank">Studydrive</a>
+</footer>
+
+</body>
+</html>

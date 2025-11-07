@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Prep Zone | VTU Student Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      padding: 1.5rem;
+      text-align: center;
+      color: white;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .section {
+      background: #1e293b;
+      border-radius: 12px;
+      margin-bottom: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-header {
+      background: #334155;
+      cursor: pointer;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #60a5fa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-content {
+      display: none;
+      padding: 1rem 1.5rem;
+      background: #1e293b;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .section-content ul {
+      margin: 0.5rem 0;
+      padding-left: 1.2rem;
+    }
+
+    a.button {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    a.button:hover {
+      background: #1d4ed8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #1e293b;
+      color: #9ca3af;
+      margin-top: 3rem;
+    }
+
+    .arrow {
+      transition: transform 0.3s;
+    }
+
+    .open .arrow {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Placement Prep Zone</h1>
+    <p>Aptitude • Coding • HR • Company-Specific Prep for VTU Students</p>
+  </header>
+
+  <div class="container">
+    
+    <!-- APTITUDE SECTION -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        Aptitude & Reasoning
+        <span class="arrow">▶</span>
+      </div>
+      <div class="section-content">
+        <p><strong>Includes:</strong> Quantitative, Logical, and Verbal reasoning with formulas and shortcuts.</p>
+        <ul>
+          <li><strong>Quantitative:</strong> Time & Work, Profit & Loss, Ratio & Proportion, Averages</li>
+          <li><strong>Logical:</strong> Puzzles, Series, Blood Relations, Coding-Decoding</li>
+          <li><strong>Verbal:</strong> Sentence Correction, Synonyms, Reading Comprehension</li>
+        </ul>
+        <a href="https://drive.google.com/aptitude-practice.pdf" target="_blank" class="button">📘 Download Aptitude PDF</a>
+        <a href="https://indiabix.com/aptitude" target="_blank" class="button">🧮 Practice Online</a>
+      </div>
+    </div>
+
+    <!-- CODING PREP SECTION -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        Coding Preparation
+        <span class="arrow">▶</span>
+      </div>
+      <div class="section-content">
+        <p><strong>Languages:</strong> C, C++, Java, Python | <strong>Focus:</strong> Data Structures & Algorithms</p>
+        <ul>
+          <li>Arrays, Strings, Linked Lists, Stacks, Queues</li>
+          <li>Sorting & Searching Algorithms</li>
+          <li>Recursion, Dynamic Programming</li>
+        </ul>
+        <a href="https://leetcode.com/explore/interview/card/top-interview-questions-easy/" target="_blank" class="button">💻 Practice DSA</a>
+        <a href="https://drive.google.com/vtu-coding-questions.pdf" target="_blank" class="button">📂 Download Coding Set</a>
+      </div>
+    </div>
+
+    <!-- HR INTERVIEW SECTION -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        HR Interview Preparation
+        <span class="arrow">▶</span>
+      </div>
+      <div class="section-content">
+        <p><strong>Includes:</strong> Common questions, best answers, and do’s & don’ts during interviews.</p>
+        <ul>
+          <li>Tell me about yourself.</li>
+          <li>What are your strengths and weaknesses?</li>
+          <li>Why should we hire you?</li>
+          <li>Where do you see yourself in 5 years?</li>
+        </ul>
+        <a href="https://drive.google.com/hr-questions.pdf" target="_blank" class="button">📑 HR Q&A PDF</a>
+        <a href="https://www.geeksforgeeks.org/hr-interview-questions/" target="_blank" class="button">🗣 Practice Online</a>
+      </div>
+    </div>
+
+    <!-- COMPANY SPECIFIC SECTION -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        Company Specific Preparation
+        <span class="arrow">▶</span>
+      </div>
+      <div class="section-content">
+        <p><strong>Target Companies:</strong> Infosys, TCS, Wipro, Accenture, Capgemini</p>
+        <ul>
+          <li><strong>TCS:</strong> Focus on aptitude + reasoning; coding round with moderate DSA.</li>
+          <li><strong>Infosys:</strong> Logical & puzzle-based; HR focuses on attitude & learning.</li>
+          <li><strong>Wipro:</strong> Mix of aptitude, verbal, and basic technical questions.</li>
+          <li><strong>Accenture:</strong> Scenario-based questions and communication test.</li>
+        </ul>
+        <a href="https://drive.google.com/placement-papers.pdf" target="_blank" class="button">📂 Download Placement Papers</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2025 VTU Student Hub | All Rights Reserved
+  </footer>
+
+  <script>
+    function toggleSection(header) {
+      const section = header.parentElement;
+      const content = section.querySelector('.section-content');
+      const allSections = document.querySelectorAll('.section-content');
+      const allHeaders = document.querySelectorAll('.section-header');
+
+      allSections.forEach(c => {
+        if (c !== content) c.style.display = "none";
+      });
+      allHeaders.forEach(h => {
+        if (h !== header) h.classList.remove("open");
+      });
+
+      if (content.style.display === "block") {
+        content.style.display = "none";
+        header.classList.remove("open");
+      } else {
+        content.style.display = "block";
+        header.classList.add("open");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - LearnPlan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-social {
+      @apply w-60 py-3 my-3 rounded-lg flex items-center justify-center gap-3 font-semibold cursor-pointer transition;
+      border: 1px solid transparent;
+    }
+    .btn-google {
+      @apply bg-white text-gray-900 hover:bg-gray-200;
+    }
+    .btn-microsoft {
+      @apply bg-[#2F2F2F] text-white hover:bg-[#444];
+    }
+    .btn-facebook {
+      @apply bg-[#1877F2] text-white hover:bg-[#145db2];
+    }
+    .btn-twitter {
+      @apply bg-[#1DA1F2] text-white hover:bg-[#1784d6];
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-slate-800 p-10 rounded-3xl shadow-xl w-full max-w-md text-center">
+    <h1 class="text-3xl font-bold mb-6">Sign in to LearnPlan</h1>
+    <p class="mb-6 text-gray-300">Choose a provider to sign in quickly</p>
+    
+    <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=openid email profile" 
+       class="btn-social btn-google" >
+      <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-6" /> Continue with Google
+    </a>
+    
+    <a href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=YOUR_MICROSOFT_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=openid email profile" 
+       class="btn-social btn-microsoft">
+      <img src="https://www.svgrepo.com/show/354113/microsoft.svg" alt="Microsoft" class="w-6" /> Continue with Microsoft
+    </a>
+
+    <a href="#" class="btn-social btn-facebook" onclick="alert('Facebook login setup pending')">
+      <img src="https://www.svgrepo.com/show/499334/facebook.svg" alt="Facebook" class="w-6" /> Continue with Facebook
+    </a>
+
+    <a href="#" class="btn-social btn-twitter" onclick="alert('Twitter login setup pending')">
+      <img src="https://www.svgrepo.com/show/448234/twitter.svg" alt="Twitter" class="w-6" /> Continue with Twitter
+    </a>
+
+    <p class="mt-8">
+      <a href="index.html" class="text-indigo-400 hover:text-indigo-600">Back to Home</a>
+    </p>
+  </div>
+</body>
+</html>
